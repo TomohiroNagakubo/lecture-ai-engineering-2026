@@ -21,28 +21,47 @@ from app.config import MODEL, api_error_message, get_api_key
 DEFAULT_QUESTION = "AIE2026の講座の宿題にある「3レベル」とは何ですか？"
 
 
-def ask(question: str) -> str:
+def ask(question: str) -> None: #会話を繰り返すため、Noneに変更
     client = genai.Client(api_key=get_api_key())
-    response = client.models.generate_content(model=MODEL, contents=question)
+    chat = client.chats.create(model=MODEL) #chatルームの作成
+    #response = client.models.generate_content(model=MODEL, contents=question)
+    current_question = question
 
-    # TODO(第1回 演習): response.usage_metadata から
-    #   入力トークン数と出力トークン数を表示してみよう（Copilotに頼んでよい）
+    while True:
+        try:
+            print(f"[質問] {current_question}\n")
+            response = chat.send_message(current_question) #質問を履歴を含めて送信（後述の current_question = user_input）
+            print(response.text) #返事を出力
+            print() #改行
 
-    return response.text
+            if response.usage_metadata is not None: #入出力のトークンの表示
+                usage = response.usage_metadata
+                print(
+                    f"[usage] input_tokens={usage.prompt_token_count} "
+                    f"output_tokens={usage.candidates_token_count}"
+                )
 
+            user_input = input("\n[続けて質問] (終了は 'exit') > ").strip() # strip()：先頭と末尾の空白を消す
+            if not user_input or user_input.lower() in ("exit", "quit", "q"): #user_input.lower()で小文字に変換. "exit", "quit", "q"で終了.
+                print("対話を終了します。")
+                break
+
+            current_question = user_input
+
+        except errors.APIError as e: #APIエラーの場合, プログラムを終了
+            print(api_error_message(e.code, e.message))
+            raise SystemExit(1) 
+        except (KeyboardInterrupt, EOFError): #Ctrl+CやCtrl+Dで終了
+            print("\n対話を終了します。")
+            break
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="素のLLMに質問する")
+    parser = argparse.ArgumentParser(description="会話履歴を保持してLLMに質問する")
     parser.add_argument("question", nargs="?", default=DEFAULT_QUESTION)
     args = parser.parse_args()
 
     print(f"[model] {MODEL}")
-    print(f"[質問] {args.question}\n")
-    try:
-        print(ask(args.question))
-    except errors.APIError as e:
-        print(api_error_message(e.code, e.message))
-        raise SystemExit(1)
+    ask(args.question)
 
 
 if __name__ == "__main__":
