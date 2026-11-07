@@ -17,12 +17,12 @@
 
 ## 宿題
 
-- 取り組んだレベル：基礎 / 実装 / 発展　発展 a）ADK で作り直す
+- 取り組んだレベル： 発展 a）ADK で作り直す
 - やったこと：  
 adk_agent/glossary_agent/ ディレクトリを作成し、__init__.py と agent.py を配置。  
 app.agent.INSTRUCTIONS および app.tools（search_glossary, get_lecture_summary, make_quiz）をそのままインポートして、ADK の Agent クラスに登録。  
 PYTHONPATH=. uv run --with google-adk \ adk run adk_agent/glossary_agent を実行し、演習と同じ質問を投げて動作・出力を検証した。  
-- 結果：
+- 結果：  
 [user]: AIE2026の講座の宿題にある「3レベル」とは何ですか?  
 [glossary_agent]: AIE2026の講座における「3レベル」とは、宿題の構成を示す以下の3段階のことです。  
   
