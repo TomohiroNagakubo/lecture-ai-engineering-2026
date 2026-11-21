@@ -30,18 +30,18 @@ p.51（PEFT）： Full Fine-Tuning（全パラメータ更新）・LoRA・QLoRA�
 p.47・p.60・p.61： 知識の追加はFTよりRAGが有利である根拠や、QLoRAを用いた演習手順・形式遵守率の評価方法。
 
 - `--trace`で見えたツール呼び出し（ツール名・引数・回数、Treeでたどった目次など）：  
-全文投入：ツール呼び出し無し。  
+  - 全文投入：ツール呼び出し無し。  
 
-ベクトル検索ツール呼び出し計1回 / モデル応答2回）：  
+  - ベクトル検索ツール呼び出し計1回 / モデル応答2回）：  
 search_materials({'query': 'LoRA QLoRA 固定 学習'}) → 検索結果として lec02-main-p052 等を取得（省略されているが、回答から p.51 も取得されていた）。
 
-Tree（ツール呼び出し計4回 / モデル応答5回）：
+  - Tree（ツール呼び出し計4回 / モデル応答5回）：  
 browse_tree({}) → ルート目次から候補（lec01-main, lec02-main, lec03-main）を取得  
 browse_tree({'node_id': 'lec02-main'}) → 第2回のセクション一覧を取得  
 browse_tree({'node_id': 'lec02-main-s045'}) → 「選んだモデルを、いつ・どう直すか」配下のスライド一覧（p.45〜p.62）を取得  
 browse_tree({'node_id': 'lec02-main-p052'}) → 該当スライド「LoRA と QLoRA」の本文717文字を取得  
 
-Graph（ツール呼び出し計1回 / モデル応答2回）：  
+  - Graph（ツール呼び出し計1回 / モデル応答2回）：  
 search_graph({'query': 'LoRA QLoRA 固定 学習'}) → シードノードとして lec02-main-p052 等を取得
 
 - 取得した情報が足りなかった例、取得できたのに回答へ使えなかった例：  
@@ -67,7 +67,7 @@ search_graph({'query': 'LoRA QLoRA 固定 学習'}) → シードノードとし
   - 手法： ベクトル検索（INSTRUCTIONS および search_materials の定義は変更なし）
   - 対象資料： lectures.json
 - 結果（変更前後の回答・根拠、`--trace`の出力、時間・トークン数・生成API推定費用など）：
-  - 変更前の解答
+  - **変更前の解答**  
 講義資料によると、LoRAおよびQLoRAでは以下の部分を固定・学習します。  
   
 * **LoRAが固定するもの**  
@@ -84,7 +84,7 @@ search_graph({'query': 'LoRA QLoRA 固定 学習'}) → シードノードとし
 [usage] 入力 3,027 tokens / 出力 194 tokens / モデル応答 2 回
 [cost] 生成APIの推定コスト: $0.001393 USD（埋め込み・索引構築分は含まない）
 
-  - 変更後の解答  
+  - **変更後の解答**  
 第2回の講義資料によると、LoRAとQLoRAの仕組みについて以下のように説明されています。  
   
 * **LoRAが固定するものと学習するもの**  
